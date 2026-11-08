@@ -230,6 +230,18 @@ button.stat .k i{font-style:normal;color:var(--gold);font-weight:600}
 .pfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 .pfoot .tel{font-size:14px;padding:8px 14px}
 
+.cta{flex-direction:column;align-items:stretch;gap:14px}
+.cnums{display:flex;flex-direction:column;gap:10px}
+.cline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px}
+.cl{font-size:12px;font-weight:600;color:#e6c776;min-width:44px}
+.cn{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:.02em;margin-right:auto;-webkit-user-select:text;user-select:text}
+.cbtn{display:inline-flex;align-items:center;gap:4px;text-decoration:none;font-weight:700;font-size:14px;border-radius:9px;padding:9px 14px;background:#fff;color:#1f3354;border:0}
+.cbtn.call{background:var(--gold);color:#fff}
+.pfoot b{color:var(--ink)}
+.pbtns{display:flex;gap:6px}
+.pfoot .cbtn{border:1px solid var(--line);padding:8px 12px}
+@media (max-width:420px){.cn{font-size:20px;width:100%}.cline .cbtn{flex:1;justify-content:center}}
+
 </style>
 </head>
 <body>
@@ -271,7 +283,16 @@ button.stat .k i{font-style:normal;color:var(--gold);font-weight:600}
     <div class="chiprow" id="cxChips" role="group" aria-label="단지"></div>
   </section>
   <section class="cards" id="cards" aria-live="polite"></section>
-  <section class="cta"><div><div class="t">원하는 조건의 집이 있는지 궁금하세요?</div><div class="s">단지·평형·층·입주 시기에 맞춰 바로 안내해 드려요.</div></div><button type="button" class="tel" data-num="010-9347-7522" data-sms="1">문의하기</button></section>
+  <section class="cta" aria-label="문의하기">
+    <div class="ctxt"><div class="t">원하는 조건의 집이 있는지 궁금하세요?</div><div class="s">단지·평형·층·입주 시기에 맞춰 바로 안내해 드려요.</div></div>
+    <div class="cnums">
+      <div class="cline"><span class="cl">휴대폰</span><span class="cn">010-9347-7522</span>
+        <a class="cbtn call" href="tel:01093477522" target="_blank" rel="noopener">📞 전화 걸기</a>
+        <a class="cbtn" href="sms:01093477522" target="_blank" rel="noopener">💬 문자 보내기</a></div>
+      <div class="cline"><span class="cl">사무실</span><span class="cn">031-263-6400</span>
+        <a class="cbtn call" href="tel:0312636400" target="_blank" rel="noopener">📞 전화 걸기</a></div>
+    </div>
+  </section>
   <section class="src">
     <p><b>데이터 출처 · 집계 기준</b></p>
     <p id="srcAsof"></p>
@@ -286,7 +307,7 @@ button.stat .k i{font-style:normal;color:var(--gold);font-weight:600}
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle">
     <div class="phead"><div><div class="ptitle" id="pTitle"></div><div class="psub" id="pSub"></div></div><button type="button" id="pClose" aria-label="닫기">닫기 ✕</button></div>
     <div class="pbody" id="pBody"></div>
-    <div class="pfoot"><span>원하는 매물이 있으면 편하게 문의해 주세요.</span><button type="button" class="tel" data-num="010-9347-7522" data-sms="1">문의하기</button></div>
+    <div class="pfoot"><span>문의 <b>010-9347-7522</b></span><span class="pbtns"><a class="cbtn call" href="tel:01093477522" target="_blank" rel="noopener">📞 전화</a><a class="cbtn" href="sms:01093477522" target="_blank" rel="noopener">💬 문자</a></span></div>
   </div>
 </div>
 
