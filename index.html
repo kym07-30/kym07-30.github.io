@@ -193,6 +193,44 @@ input{-webkit-user-select:text;user-select:text}
 @media (prefers-color-scheme: dark){.cta{background:#24304a}}
 @media (max-width:420px){.cards{grid-template-columns:1fr}}
 </style>
+<style>
+button.stat{font:inherit;text-align:left;cursor:pointer;display:block;width:100%;color:var(--ink)}
+button.stat:hover{border-color:var(--gold)}
+button.stat .k{display:flex;justify-content:space-between}
+button.stat .k i{font-style:normal;color:var(--gold);font-weight:600}
+.chg30{font-size:13px;color:var(--muted)}
+.chg30 b.up{color:#c0392b}.chg30 b.dn{color:#1d5fa8}
+.rt{border-top:1px dashed var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.rt .rh{font-size:12px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:6px}
+.rt .rh span{background:var(--navy-soft);border-radius:4px;padding:1px 6px}
+.rt .rv{font-size:14px}.rt .rv b{font-family:var(--font-display);font-size:17px}
+.rt .rv small{color:var(--muted)}
+.rt details summary{font-size:12.5px;color:var(--muted);cursor:pointer}
+.rt ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:3px;font-size:13px;font-variant-numeric:tabular-nums}
+.rt li{display:grid;grid-template-columns:70px 44px 1fr;gap:6px}
+.rt li .dt{color:var(--muted)}
+.rt .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.mk .more{align-self:flex-start;font-size:13px}
+.panel-bg{position:fixed;inset:0;background:rgba(10,12,18,.5);z-index:65;display:flex;align-items:flex-end;justify-content:center}
+.panel-bg[hidden]{display:none}
+.panel{background:var(--surface);color:var(--ink);width:min(720px,100%);max-height:88vh;border-radius:16px 16px 0 0;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+@media (min-width:760px){.panel-bg{align-items:center}.panel{border-radius:16px}}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.ptitle{font-family:var(--font-display);font-size:19px;font-weight:700}
+.psub{font-size:13px;color:var(--muted)}
+.pbody{overflow-y:auto;padding:4px 18px 12px}
+.pg{margin-top:12px}
+.pg h3{margin:0 0 4px;font-size:15px;font-family:var(--font-display);display:flex;gap:6px;align-items:baseline}
+.pg h3 small{font-size:12px;color:var(--muted);font-weight:500}
+.lrow{display:grid;grid-template-columns:52px 40px 1fr auto;gap:8px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.lrow .lp{font-family:var(--font-display);font-weight:700;color:var(--gold);white-space:nowrap}
+.lrow .lp small{display:block;font-size:11.5px;color:var(--warn);font-weight:500;font-family:var(--font-body)}
+.lrow .lt{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.lrow .muted{color:var(--muted)}
+.pfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.pfoot .tel{font-size:14px;padding:8px 14px}
+
+</style>
 </head>
 <body>
 <div class="wm" aria-hidden="true"></div>
@@ -226,7 +264,7 @@ input{-webkit-user-select:text;user-select:text}
     <div class="asof">호가 기준 · 2026년 11월 8일 집계</div>
   </header>
 
-  <p class="note">수지구청역 주변 아파트의 단지·평형별 <b>호가(집주인이 내놓은 희망 가격)</b> 분포를 한눈에 볼 수 있게 정리했어요. 실제 거래가격이 아니에요.</p>
+  <p class="note">수지구청역 주변 아파트의 단지·평형별 <b>호가(집주인이 내놓은 희망 가격)</b>와 <b>국토부 실거래가</b>를 한눈에 볼 수 있게 정리했어요. 아래 숫자 칸을 누르면 해당 매물을 볼 수 있어요.</p>
   <section class="stats" id="stats" aria-label="요약"></section>
   <section class="controls" aria-label="보기">
     <div class="chiprow"><div class="seg" role="group" aria-label="거래 유형"><button type="button" data-t="sale" aria-pressed="true">매매</button><button type="button" data-t="jeon" aria-pressed="false">전세</button></div></div>
@@ -236,45 +274,111 @@ input{-webkit-user-select:text;user-select:text}
   <section class="cta"><div><div class="t">원하는 조건의 집이 있는지 궁금하세요?</div><div class="s">단지·평형·층·입주 시기에 맞춰 바로 안내해 드려요.</div></div><button type="button" class="tel" data-num="010-9347-7522" data-sms="1">문의하기</button></section>
   <section class="src">
     <p><b>데이터 출처 · 집계 기준</b></p>
-    <p>· 네이버 부동산 등록 매물의 호가를 황금1번지가 단지·평형별로 정리했어요 (2026.11.08 기준).</p>
+    <p id="srcAsof"></p>
+    <p>· 실거래: 국토교통부 실거래가 공개시스템 (최근 1년, 계약일 기준). 신고 시기에 따라 늦게 반영될 수 있고, 해제된 거래는 뺐어요.</p>
     <p>· 호가는 매도·임대 희망가격이며 실제 거래가격이 아니에요. 같은 매물이 여러 번 등록된 경우 일부 중복될 수 있어요.</p>
     <p>· 중간 호가 = 같은 단지·평형 호가를 낮은 순으로 세웠을 때 한가운데 가격(중앙값)이에요.</p>
     <p>· 집마다 조건이 달라 모든 수치는 참고자료로만 활용해 주세요.</p>
   </section>
   <footer>황금1번지 공인중개사사무소 · 010-9347-7522 / 031-263-6400 · 무단 복제·배포를 금합니다.</footer>
 </div>
+<div class="panel-bg" id="panelBg" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <div class="phead"><div><div class="ptitle" id="pTitle"></div><div class="psub" id="pSub"></div></div><button type="button" id="pClose" aria-label="닫기">닫기 ✕</button></div>
+    <div class="pbody" id="pBody"></div>
+    <div class="pfoot"><span>원하는 매물이 있으면 편하게 문의해 주세요.</span><button type="button" class="tel" data-num="010-9347-7522" data-sms="1">문의하기</button></div>
+  </div>
+</div>
 
 <script>
 (function(){
-  const AGG = {"groups": [{"cx": "삼성5차", "py": "34평", "k": 101, "sale": {"n": 9, "min": 13.6, "med": 14.9, "max": 15.0}, "jeon": {"n": 1, "min": 7.5, "med": 7.5, "max": 7.5}, "wol": 0, "new": 0, "down": 3}, {"cx": "삼성5차", "py": "44평", "k": 111, "sale": {"n": 10, "min": 13.0, "med": 15.55, "max": 16.0}, "jeon": {"n": 2, "min": 8.0, "med": 8.25, "max": 8.5}, "wol": 2, "new": 1, "down": 2}, {"cx": "푸르지오", "py": "34·43평", "k": 121, "sale": {"n": 10, "min": 13.0, "med": 13.85, "max": 15.3}, "jeon": {"n": 1, "min": 7.6, "med": 7.6, "max": 7.6}, "wol": 1, "new": 1, "down": 0}, {"cx": "삼성5차", "py": "50평", "k": 2801, "sale": {"n": 6, "min": 14.5, "med": 15.75, "max": 18.5}, "jeon": null, "wol": 0, "new": 0, "down": 0}, {"cx": "삼성5차", "py": "59평", "k": 2811, "sale": {"n": 2, "min": 16.0, "med": 16.5, "max": 17.0}, "jeon": {"n": 1, "min": 9.5, "med": 9.5, "max": 9.5}, "wol": 0, "new": 1, "down": 0}, {"cx": "삼성6차·7차", "py": "51·53평", "k": 2821, "sale": {"n": 4, "min": 15.0, "med": 15.5, "max": 17.2}, "jeon": {"n": 2, "min": 7.5, "med": 9.0, "max": 10.5}, "wol": 0, "new": 0, "down": 1}, {"cx": "삼성6차·7차", "py": "63·64평", "k": 4801, "sale": {"n": 4, "min": 16.0, "med": 16.25, "max": 17.0}, "jeon": {"n": 1, "min": 8.0, "med": 8.0, "max": 8.0}, "wol": 0, "new": 1, "down": 0}, {"cx": "삼성7차", "py": "75평", "k": 4811, "sale": {"n": 3, "min": 16.0, "med": 18.0, "max": 18.5}, "jeon": null, "wol": 0, "new": 0, "down": 0}, {"cx": "삼성7차", "py": "85평", "k": 4821, "sale": {"n": 2, "min": 15.0, "med": 15.0, "max": 15.0}, "jeon": null, "wol": 0, "new": 0, "down": 0}, {"cx": "성원상떼빌", "py": "24/18평", "k": 6601, "sale": {"n": 10, "min": 9.2, "med": 9.55, "max": 9.8}, "jeon": {"n": 1, "min": 5.0, "med": 5.0, "max": 5.0}, "wol": 1, "new": 1, "down": 0}, {"cx": "성원상떼빌", "py": "32/25평", "k": 6611, "sale": {"n": 5, "min": 10.0, "med": 10.8, "max": 11.0}, "jeon": {"n": 7, "min": 5.2, "med": 5.6, "max": 6.0}, "wol": 2, "new": 1, "down": 1}, {"cx": "성원상떼빌", "py": "48/40평", "k": 6621, "sale": {"n": 3, "min": 9.5, "med": 10.5, "max": 10.9}, "jeon": {"n": 1, "min": 7.0, "med": 7.0, "max": 7.0}, "wol": 2, "new": 0, "down": 0}], "tot": {"all": 93, "sale": 68, "jeon": 17, "wol": 8, "new": 6, "down": 7}};
+  const D = {"asof": "2026-11-08", "prevDate": null, "histStart": "2026-11-08", "groups": [{"g": "삼성5차 34평", "cx": "삼성5차", "py": "34평", "sale": {"n": 9, "min": 13.6, "med": 14.9, "max": 15.0}, "jeon": {"n": 1, "min": 7.5, "med": 7.5, "max": 7.5}, "wol": 0, "new": 0, "down": 3, "rt": [{"lab": "", "area": "84", "s": {"n": 41, "hi": 150500, "m3": 145000, "c3": 6, "last": [[261103, 138500, 7], [261031, 147000, 5], [261022, 150500, 7], [261014, 142000, 3], [261009, 149800, 6], [260813, 143000, 15]]}, "j": {"n": 31, "hi": 74000, "m3": 59850, "c3": 7, "last": [[261031, 53500, 7], [261018, 74000, 9], [261010, 58800, 7], [260911, 59850, 4], [260905, 50000, 14], [260820, 60000, 6]]}}]}, {"g": "삼성5차 44평", "cx": "삼성5차", "py": "44평", "sale": {"n": 10, "min": 13.0, "med": 15.55, "max": 16.0}, "jeon": {"n": 2, "min": 8.0, "med": 8.25, "max": 8.5}, "wol": 2, "new": 1, "down": 2, "rt": [{"lab": "", "area": "114", "s": {"n": 14, "hi": 140000, "m3": null, "c3": 0, "last": [[260722, 138000, 6], [260616, 137500, 9], [260530, 140000, 7], [260520, 93100, 16], [260514, 100000, 17], [260505, 81000, 15]]}, "j": {"n": 16, "hi": 88000, "m3": 74000, "c3": 2, "last": [[261017, 88000, 18], [260820, 60000, 14], [260712, 65000, 3], [260620, 50000, 17], [260613, 48000, 8], [260604, 70000, 13]]}}]}, {"g": "푸르지오 34·43평", "cx": "푸르지오", "py": "34·43평", "sale": {"n": 10, "min": 13.0, "med": 13.85, "max": 15.3}, "jeon": {"n": 1, "min": 7.6, "med": 7.6, "max": 7.6}, "wol": 1, "new": 1, "down": 0, "rt": [{"lab": "34평", "area": "85", "s": {"n": 12, "hi": 123000, "m3": 115000, "c3": 1, "last": [[260825, 115000, 17], [260725, 123000, 12], [260721, 118700, 19], [260717, 115000, 12], [260711, 118000, 13], [260507, 110000, 1]]}, "j": {"n": 28, "hi": 75000, "m3": 58800, "c3": 13, "last": [[261030, 56700, 17], [261027, 58800, 5], [261023, 56700, 4], [261021, 70500, 13], [261015, 72000, 3], [261009, 57700, 14]]}}, {"lab": "43평", "area": "115", "s": {"n": 1, "hi": 119300, "m3": null, "c3": 0, "last": [[251220, 119300, 8]]}, "j": {"n": 1, "hi": 68000, "m3": null, "c3": 0, "last": [[260117, 68000, 7]]}}]}, {"g": "삼성5차 50평", "cx": "삼성5차", "py": "50평", "sale": {"n": 6, "min": 14.5, "med": 15.75, "max": 18.5}, "jeon": null, "wol": 0, "new": 0, "down": 0, "rt": [{"lab": "", "area": "128", "s": {"n": 14, "hi": 149000, "m3": null, "c3": 0, "last": [[260711, 149000, 16], [260530, 145000, 4], [260526, 142000, 16], [260423, 129000, 9], [260305, 136000, 4], [260302, 132000, 6]]}, "j": {"n": 13, "hi": 95000, "m3": null, "c3": 0, "last": [[260725, 71400, 3], [260606, 95000, 17], [260516, 90000, 4], [260418, 80000, 8], [260416, 80000, 8], [260225, 40000, 16]]}}]}, {"g": "삼성5차 59평", "cx": "삼성5차", "py": "59평", "sale": {"n": 2, "min": 16.0, "med": 16.5, "max": 17.0}, "jeon": {"n": 1, "min": 9.5, "med": 9.5, "max": 9.5}, "wol": 0, "new": 1, "down": 0, "rt": [{"lab": "", "area": "155", "s": {"n": 5, "hi": 137000, "m3": null, "c3": 0, "last": [[260428, 130000, 4], [260312, 129500, 1], [260220, 137000, 5], [260130, 130000, 2], [260102, 117000, 1]]}, "j": {"n": 3, "hi": 80000, "m3": null, "c3": 0, "last": [[260730, 80000, 3], [260413, 80000, 7], [251125, 77000, 7]]}}]}, {"g": "삼성6차·7차 51·53평", "cx": "삼성6차·7차", "py": "51·53평", "sale": {"n": 4, "min": 15.0, "med": 15.5, "max": 17.2}, "jeon": {"n": 2, "min": 7.5, "med": 9.0, "max": 10.5}, "wol": 0, "new": 0, "down": 1, "rt": [{"lab": "삼성6차", "area": "135", "s": {"n": 1, "hi": 144000, "m3": 144000, "c3": 1, "last": [[260819, 144000, 8]]}, "j": {"n": 1, "hi": 72400, "m3": null, "c3": 0, "last": [[260711, 72400, 2]]}}, {"lab": "삼성7차", "area": "134", "s": {"n": 5, "hi": 133000, "m3": 123500, "c3": 1, "last": [[260811, 123500, 3], [260704, 133000, 11], [260515, 122500, 7], [260406, 100000, 4], [251213, 115000, 5]]}, "j": {"n": 1, "hi": 60900, "m3": null, "c3": 0, "last": [[260428, 60900, 15]]}}, {"lab": "삼성7차", "area": "136", "s": {"n": 3, "hi": 133000, "m3": null, "c3": 0, "last": [[260704, 133000, 10], [260121, 110000, 1], [251222, 105000, 10]]}, "j": {"n": 2, "hi": 68250, "m3": null, "c3": 0, "last": [[260717, 68250, 11], [260717, 68250, 11]]}}]}, {"g": "삼성6차·7차 63·64평", "cx": "삼성6차·7차", "py": "63·64평", "sale": {"n": 4, "min": 16.0, "med": 16.25, "max": 17.0}, "jeon": {"n": 1, "min": 8.0, "med": 8.0, "max": 8.0}, "wol": 0, "new": 1, "down": 0, "rt": [{"lab": "삼성6차", "area": "165", "s": {"n": 8, "hi": 167000, "m3": 162500, "c3": 2, "last": [[261008, 167000, 9], [260910, 158000, 5], [260620, 150000, 10], [260613, 149000, 4], [260506, 149000, 6], [260320, 147000, 8]]}, "j": {"n": 7, "hi": 85000, "m3": 80625, "c3": 2, "last": [[261017, 82500, 4], [261001, 78750, 3], [260720, 75000, 3], [251129, 63000, 12], [251125, 83000, 8], [251122, 75000, 11]]}}, {"lab": "삼성7차", "area": "165", "s": {"n": 4, "hi": 143000, "m3": 143000, "c3": 1, "last": [[261027, 143000, 9], [260630, 129000, 7], [260225, 140000, 12], [260117, 121500, 8]]}, "j": {"n": 2, "hi": 80000, "m3": null, "c3": 0, "last": [[260729, 69300, 5], [260716, 80000, 4]]}}]}, {"g": "삼성7차 75평", "cx": "삼성7차", "py": "75평", "sale": {"n": 3, "min": 16.0, "med": 18.0, "max": 18.5}, "jeon": null, "wol": 0, "new": 0, "down": 0, "rt": [{"lab": "", "area": "198", "s": {"n": 8, "hi": 130000, "m3": null, "c3": 0, "last": [[260630, 125000, 3], [260603, 127000, 12], [260530, 130000, 10], [260515, 130000, 13], [260422, 120000, 2], [260307, 119500, 2]]}, "j": {"n": 4, "hi": 85000, "m3": 80000, "c3": 1, "last": [[261031, 80000, 5], [260709, 70000, 12], [260709, 70000, 12], [260314, 85000, 6]]}}]}, {"g": "삼성7차 85평", "cx": "삼성7차", "py": "85평", "sale": {"n": 2, "min": 15.0, "med": 15.0, "max": 15.0}, "jeon": null, "wol": 0, "new": 0, "down": 0, "rt": [{"lab": "", "area": "225", "s": {"n": 2, "hi": 150000, "m3": null, "c3": 0, "last": [[260806, 134000, 5], [260711, 150000, 4]]}, "j": {"n": 6, "hi": 100000, "m3": 78000, "c3": 1, "last": [[261030, 78000, 11], [260723, 100000, 7], [260512, 75000, 11], [260120, 78000, 11], [251119, 75000, 1], [251119, 75000, 1]]}}]}, {"g": "성원상떼빌 24/18평", "cx": "성원상떼빌", "py": "24/18평", "sale": {"n": 10, "min": 9.2, "med": 9.55, "max": 9.8}, "jeon": {"n": 1, "min": 5.0, "med": 5.0, "max": 5.0}, "wol": 1, "new": 1, "down": 0, "rt": [{"lab": "", "area": "60", "s": {"n": 44, "hi": 96000, "m3": 92400, "c3": 8, "last": [[261028, 93000, 9], [261028, 92800, 13], [261024, 90000, 5], [261020, 96000, 8], [261014, 92000, 11], [261010, 88500, 16]]}, "j": {"n": 49, "hi": 47000, "m3": 44500, "c3": 10, "last": [[261106, 44000, 2], [261024, 45000, 7], [261023, 45500, 16], [261022, 45000, 6], [261007, 34650, 3], [261002, 38325, 5]]}}]}, {"g": "성원상떼빌 32/25평", "cx": "성원상떼빌", "py": "32/25평", "sale": {"n": 5, "min": 10.0, "med": 10.8, "max": 11.0}, "jeon": {"n": 7, "min": 5.2, "med": 5.6, "max": 6.0}, "wol": 2, "new": 1, "down": 1, "rt": [{"lab": "", "area": "85", "s": {"n": 33, "hi": 95000, "m3": 93500, "c3": 3, "last": [[261007, 95000, 19], [260919, 75000, 1], [260918, 93500, 10], [260808, 93800, 8], [260723, 91000, 14], [260702, 84000, 1]]}, "j": {"n": 44, "hi": 60000, "m3": 52000, "c3": 10, "last": [[261028, 60000, 5], [261024, 52000, 7], [261016, 59000, 4], [261012, 43000, 6], [261010, 50000, 7], [261009, 55000, 6]]}}]}, {"g": "성원상떼빌 48/40평", "cx": "성원상떼빌", "py": "48/40평", "sale": {"n": 3, "min": 9.5, "med": 10.5, "max": 10.9}, "jeon": {"n": 1, "min": 7.0, "med": 7.0, "max": 7.0}, "wol": 2, "new": 0, "down": 0, "rt": [{"lab": "", "area": "133", "s": {"n": 9, "hi": 97000, "m3": 97000, "c3": 1, "last": [[261009, 97000, 6], [260528, 83000, 10], [260417, 60000, 8], [260320, 93000, 17], [260225, 92000, 10], [260224, 90000, 4]]}, "j": {"n": 10, "hi": 65000, "m3": 54400, "c3": 2, "last": [[260829, 50000, 2], [260813, 58800, 3], [260506, 60000, 12], [260314, 59000, 1], [260314, 64000, 3], [260110, 65000, 16]]}}]}], "tot": {"sale": 68, "jeon": 17, "wol": 8, "new": 6, "down": 7}, "list": [{"g": "삼성5차 34평", "t": "매매", "d": "510", "b": "중층", "p": "14.9", "x": "15→14.9", "n": 0, "dn": 1, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "515", "b": "저층", "p": "13.6", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 34평", "t": "매매", "d": "515", "b": "중층", "p": "15", "x": "15.5→15", "n": 0, "dn": 1, "se": 1}, {"g": "삼성5차 34평", "t": "매매", "d": "515", "b": "고층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "516", "b": "고층", "p": "14.9", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "518", "b": "고층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "523", "b": "중층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "523", "b": "중층", "p": "14.8", "x": "15→14.8", "n": 0, "dn": 1, "se": 0}, {"g": "삼성5차 34평", "t": "매매", "d": "524", "b": "중층", "p": "14.8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 34평", "t": "전세", "d": "526", "b": "고층", "p": "7.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 50평", "t": "매매", "d": "504", "b": "중층", "p": "18.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 50평", "t": "매매", "d": "509", "b": "저층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 50평", "t": "매매", "d": "522", "b": "저층", "p": "14.5", "x": "14-14.5", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 50평", "t": "매매", "d": "522", "b": "저층", "p": "14.5", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 50평", "t": "매매", "d": "525", "b": "고층", "p": "15.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 50평", "t": "매매", "d": "525", "b": "고층", "p": "16.8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 63·64평", "t": "매매", "d": "611", "b": "고층", "p": "17", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "삼성6차·7차 63·64평", "t": "매매", "d": "705", "b": "저층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 63·64평", "t": "매매", "d": "706", "b": "중층", "p": "16.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 63·64평", "t": "매매", "d": "706", "b": "고층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 63·64평", "t": "전세", "d": "705", "b": "중층", "p": "8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "109", "b": "중층", "p": "9.6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "110", "b": "중층", "p": "9.8", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "110", "b": "고층", "p": "9.6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "111", "b": "중층", "p": "9.6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "113", "b": "고층", "p": "9.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "113", "b": "중층", "p": "9.4", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "114", "b": "저층", "p": "9.3", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "114", "b": "중층", "p": "9.2", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "114", "b": "중층", "p": "9.4", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "매매", "d": "114", "b": "고층", "p": "9.7", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "전세", "d": "110", "b": "중층", "p": "5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 24/18평", "t": "월세", "d": "110", "b": "고층", "p": "1/160", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "501", "b": "고층", "p": "15.8", "x": "16.5→15.8", "n": 0, "dn": 1, "se": 1}, {"g": "삼성5차 44평", "t": "매매", "d": "514", "b": "중층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "저층", "p": "13", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "저층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "중층", "p": "15.5", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "중층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "고층", "p": "15.6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "520", "b": "고층", "p": "15.5", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "매매", "d": "521", "b": "저층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 44평", "t": "매매", "d": "521", "b": "저층", "p": "14.9", "x": "15.8→15.5", "n": 0, "dn": 1, "se": 0}, {"g": "삼성5차 44평", "t": "전세", "d": "512", "b": "중층", "p": "8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "전세", "d": "521", "b": "중층", "p": "8.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "월세", "d": "520", "b": "중층", "p": "1/300", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 44평", "t": "월세", "d": "521", "b": "고층", "p": "4.5~160\n5~140", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 59평", "t": "매매", "d": "505", "b": "중층", "p": "17", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "삼성5차 59평", "t": "매매", "d": "505", "b": "저층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성5차 59평", "t": "전세", "d": "505", "b": "-", "p": "9.5", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "삼성7차 75평", "t": "매매", "d": "707", "b": "저층", "p": "18", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성7차 75평", "t": "매매", "d": "708", "b": "중층", "p": "18.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성7차 75평", "t": "매매", "d": "708", "b": "중층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "매매", "d": "101", "b": "중층", "p": "10", "x": "10.2→10.4", "n": 0, "dn": 0, "se": 1}, {"g": "성원상떼빌 32/25평", "t": "매매", "d": "103", "b": "중층", "p": "11", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "매매", "d": "103", "b": "고층", "p": "10.8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "매매", "d": "104", "b": "저층", "p": "10", "x": "9.6→10", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "매매", "d": "102", "b": "고층", "p": "11", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "101", "b": "저층", "p": "5.6", "x": "5.5-5.8", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "102", "b": "저층", "p": "5.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "103", "b": "저층", "p": "6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "105", "b": "고층", "p": "5.2", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "106", "b": "저층", "p": "5.4", "x": "5.6→5.4", "n": 0, "dn": 1, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "104", "b": "저층", "p": "5.9", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "전세", "d": "101", "b": "고층", "p": "5.7", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "월세", "d": "106", "b": "중층", "p": "500/320", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 32/25평", "t": "월세", "d": "102", "b": "저층", "p": "3.2/50", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "101", "b": "중층", "p": "13.8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "101", "b": "중층", "p": "13.8", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "101", "b": "고층", "p": "13", "x": "", "n": 0, "dn": 0, "se": 1}, {"g": "푸르지오 34·43평", "t": "매매", "d": "104", "b": "저층", "p": "14", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "104", "b": "저층", "p": "13", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "104", "b": "중층", "p": "13.2", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "104", "b": "고층", "p": "14", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "106", "b": "저층", "p": "14", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "106", "b": "중층", "p": "13.9", "x": "", "n": 1, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "매매", "d": "105", "b": "저층", "p": "15.3", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "전세", "d": "102", "b": "중층", "p": "7.6", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "푸르지오 34·43평", "t": "월세", "d": "101", "b": "저층", "p": "2/210", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "매매", "d": "710", "b": "저층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "매매", "d": "710", "b": "중층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "매매", "d": "710", "b": "저층", "p": "16", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "매매", "d": "606", "b": "고층", "p": "17.2", "x": "17.7→17.2", "n": 0, "dn": 1, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "전세", "d": "710", "b": "저층", "p": "7.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성6차·7차 51·53평", "t": "전세", "d": "606", "b": "고층", "p": "10.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성7차 85평", "t": "매매", "d": "703", "b": "고층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "삼성7차 85평", "t": "매매", "d": "703", "b": "저층", "p": "15", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "매매", "d": "115", "b": "저층", "p": "9.5", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "매매", "d": "115", "b": "저층", "p": "10.5", "x": "10-10.5", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "매매", "d": "115", "b": "저층", "p": "10.9", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "전세", "d": "119", "b": "저층", "p": "7\n5.5/80", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "월세", "d": "115", "b": "저층", "p": "4/120\n3/160", "x": "", "n": 0, "dn": 0, "se": 0}, {"g": "성원상떼빌 48/40평", "t": "월세", "d": "116", "b": "중층", "p": "2/180", "x": "", "n": 0, "dn": 0, "se": 0}]};
   const $ = id => document.getElementById(id);
   document.addEventListener("contextmenu", e => e.preventDefault());
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   let T = "sale", CX = "전체";
+  const TL = {sale: "매매", jeon: "전세"};
   function eok(n){ const e = Math.floor(n + 1e-9), m = Math.round((n - e) * 10000); return m ? (e ? e + "억 " : "") + m.toLocaleString("ko-KR") + "만" : e + "억"; }
-  function short(n){ return (Math.round(n * 100) / 100) + "억"; }
+  const short = n => (Math.round(n * 100) / 100) + "억";
+  const man = v => eok(v / 10000);
+  const dstr = v => { const s = String(v); return s.slice(0,2) + "." + s.slice(2,4) + "." + s.slice(4,6); };
+  const md = s => { const [y,m,d] = s.split("-"); return `${+m}/${+d}`; };
+  const isNum = v => /^\d+(\.\d+)?$/.test(String(v).trim());
+
+  $("srcAsof").textContent = `· 호가: 네이버 부동산 등록 매물을 황금1번지가 단지·평형별로 정리했어요 (${D.asof.replace(/-/g, ".")} 기준).`;
+
   function render(){
-    const tt = AGG.tot;
-    $("stats").innerHTML = [["집계 단지·평형", AGG.groups.length, "개"], ["매매 호가", tt.sale, "건"], ["전세 호가", tt.jeon, "건"], ["이번 주 신규", tt.new, "건"], ["가격 내림", tt.down, "건"]]
-      .map(([k,v,u]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}<small>${u}</small></div></div>`).join("");
+    const tt = D.tot;
+    const tiles = [["sale", "매매", tt.sale], ["jeon", "전세", tt.jeon], ["wol", "월세", tt.wol], ["new", "이번 주 신규", tt.new], ["down", "가격 내림", tt.down]];
+    $("stats").innerHTML = tiles.map(([k, l, v]) => `<button type="button" class="stat" data-open="${k}"><div class="k">${l}<i>보기 ›</i></div><div class="v">${v}<small>건</small></div></button>`).join("");
     document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.t === T)));
-    const cxs = ["전체", ...Array.from(new Set(AGG.groups.map(g => g.cx)))];
+    const cxs = ["전체", ...Array.from(new Set(D.groups.map(g => g.cx)))];
     $("cxChips").innerHTML = `<span class="lab">단지</span>` + cxs.map(c => `<button type="button" class="chip" data-cx="${esc(c)}" aria-pressed="${c === CX}">${esc(c)}</button>`).join("");
-    const list = AGG.groups.filter(g => g[T] && (CX === "전체" || g.cx === CX));
+    const list = D.groups.filter(g => g[T] && (CX === "전체" || g.cx === CX));
     if (!list.length){ $("cards").innerHTML = `<div class="empty">이 조건의 호가 정보가 없어요.</div>`; return; }
     const lo = Math.min(...list.map(g => g[T].min)), hi = Math.max(...list.map(g => g[T].max));
     const pos = v => hi === lo ? 50 : 4 + (v - lo) / (hi - lo) * 92;
     $("cards").innerHTML = list.map(g => { const a = g[T];
-      const tags = [`${T === "sale" ? "매매" : "전세"} ${a.n}건`]
-        .concat(g.wol && T === "jeon" ? [`월세 ${g.wol}건`] : []);
+      // 30일 호가 변화
+      let chg;
+      if (g.prev && g.prev[T] != null){
+        const dlt = Math.round((a.med - g.prev[T]) * 100) / 100;
+        chg = `30일 호가 변화 (${md(D.prevDate)} → ${md(D.asof)}) · ${short(g.prev[T])} → ${short(a.med)} ` +
+          (dlt > 0 ? `<b class="up">▲${short(dlt)}</b>` : dlt < 0 ? `<b class="dn">▼${short(-dlt)}</b>` : `<b>변동 없음</b>`);
+      } else chg = `30일 호가 변화 · ${md(D.histStart)}부터 기록 중이라 한 달 뒤부터 보여드려요`;
+      // 국토부 실거래
+      const tk = T === "sale" ? "s" : "j";
+      const rts = g.rt.filter(r => r[tk]);
+      const rtHTML = rts.length ? `<div class="rt"><div class="rh"><span>국토부 실거래</span>${TL[T]} · 최근 1년</div>` + rts.map(r => { const s = r[tk];
+          const lab = (r.lab ? r.lab + " " : "") + "전용 " + r.area + "㎡";
+          const main = s.m3 ? `최근 3개월 중간값 <b>${man(s.m3)}</b> <small>(${s.c3}건)</small>` : `최근 3개월 거래 없음`;
+          return `<div class="rv">${rts.length > 1 || r.lab ? `<div class="sub">${esc(lab)}</div>` : ""}${main}<br><small>1년 ${s.n}건 · 최고 ${man(s.hi)}</small></div>
+            <details><summary>최근 거래 ${s.last.length}건 보기</summary><ul>${s.last.map(x => `<li><span class="dt">${dstr(x[0])}</span><span>${x[2]}층</span><span>${man(x[1])}</span></li>`).join("")}</ul></details>`; }).join("") +
+        (rts.length === 1 && !rts[0].lab ? `<div class="sub">전용 ${rts[0].area}㎡ 기준</div>` : "") + `</div>` : "";
+      const cnt = D.list.filter(x => x.g === g.g && x.t === TL[T]).length;
       return `<article class="mk">
         <h2>${esc(g.cx)} <small>${esc(g.py)}</small></h2>
         <div class="med">${eok(a.med)}<span>중간 호가</span></div>
         <div class="rng" aria-hidden="true"><div class="bar" style="left:${pos(a.min)}%;right:${100 - pos(a.max)}%"></div><div class="dot" style="left:${pos(a.med)}%"></div></div>
         <div class="rlab"><span>최저 <b>${short(a.min)}</b></span><span>최고 <b>${short(a.max)}</b></span></div>
-        <div class="tags">${tags.map(x => `<span class="tag">${x}</span>`).join("")}${g.new ? `<span class="tag new">이번 주 신규 ${g.new}</span>` : ""}${g.down ? `<span class="tag dn">가격 내림 ${g.down}</span>` : ""}</div>
+        <div class="chg30">${chg}</div>
+        <div class="tags"><span class="tag">${TL[T]} 호가 ${a.n}건</span>${g.wol && T === "jeon" ? `<span class="tag">월세 ${g.wol}건</span>` : ""}${g.new ? `<span class="tag new">이번 주 신규 ${g.new}</span>` : ""}${g.down ? `<span class="tag dn">가격 내림 ${g.down}</span>` : ""}</div>
+        ${rtHTML}
+        ${cnt ? `<button type="button" class="more" data-grp="${esc(g.g)}">${TL[T]} 매물 ${cnt}건 보기 ›</button>` : ""}
       </article>`; }).join("");
   }
+
+  // ---------- 매물 목록 창 ----------
+  const OPEN = {
+    sale: ["매매 매물", x => x.t === "매매"], jeon: ["전세 매물", x => x.t === "전세"], wol: ["월세 매물", x => x.t === "월세"],
+    new: ["이번 주 신규 매물", x => x.n], down: ["가격 내린 매물", x => x.dn]
+  };
+  function openList(title, fn, showType){
+    const rows = D.list.filter(fn);
+    const order = D.groups.map(g => g.g);
+    const byG = new Map();
+    rows.forEach(x => { if (!byG.has(x.g)) byG.set(x.g, []); byG.get(x.g).push(x); });
+    const tOrd = {"매매": 0, "전세": 1, "월세": 2};
+    const pn = x => { const m = String(x.p).match(/\d+(\.\d+)?/); return m ? +m[0] : 1e9; };
+    $("pTitle").textContent = title;
+    $("pSub").textContent = `${rows.length}건 · ${D.asof.replace(/-/g, ".")} 기준 · 호가(희망가격)`;
+    $("pBody").innerHTML = rows.length ? Array.from(byG.entries()).sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0])).map(([g, arr]) => {
+      arr.sort((a, b) => (tOrd[a.t] ?? 3) - (tOrd[b.t] ?? 3) || pn(a) - pn(b));
+      const [cx, py] = [g.slice(0, g.lastIndexOf(" ")), g.slice(g.lastIndexOf(" ") + 1)];
+      return `<div class="pg"><h3>${esc(cx)} <small>${esc(py)} · ${arr.length}건</small></h3>` + arr.map(x => `<div class="lrow">
+          <span>${x.d ? esc(/^\d+$/.test(x.d) ? x.d + "동" : x.d) : "-"}</span>
+          <span class="muted">${esc(x.b)}</span>
+          <span class="lp">${isNum(x.p) ? eok(+x.p) : esc(x.p)}${x.x ? `<small>${esc(x.x)}</small>` : ""}</span>
+          <span class="lt">${showType ? `<span class="tag">${x.t}</span>` : ""}${x.n ? `<span class="tag new">신규</span>` : ""}${x.dn ? `<span class="tag dn">내림</span>` : ""}${x.se ? `<span class="tag">세안고</span>` : ""}</span>
+        </div>`).join("") + `</div>`; }).join("") : `<div class="empty">해당 매물이 없어요.</div>`;
+    $("panelBg").hidden = false; $("pBody").scrollTop = 0;
+  }
+  function closeList(){ $("panelBg").hidden = true; }
+  $("stats").addEventListener("click", e => { const b = e.target.closest("button[data-open]"); if (b){ const k = b.dataset.open, [t, fn] = OPEN[k]; openList(t, fn, k === "new" || k === "down"); } });
+  $("cards").addEventListener("click", e => { const b = e.target.closest("button[data-grp]"); if (b){ const g = b.dataset.grp; openList(`${g} ${TL[T]} 매물`, x => x.g === g && x.t === TL[T]); } });
+  $("pClose").addEventListener("click", closeList);
+  $("panelBg").addEventListener("click", e => { if (e.target === $("panelBg")) closeList(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("panelBg").hidden) closeList(); });
   document.querySelector(".seg").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (b){ T = b.dataset.t; render(); } });
   $("cxChips").addEventListener("click", e => { const b = e.target.closest("button[data-cx]"); if (b){ CX = b.dataset.cx; render(); } });
   // 전화 버튼: 바로 걸지 않고, 번호를 보여준 뒤 전화·문자·복사 중 고르게 한다.
