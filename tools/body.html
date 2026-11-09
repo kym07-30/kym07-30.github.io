@@ -1,0 +1,35 @@
+  <p class="note">수지구청역 주변 아파트의 단지·평형별 <b>호가(집주인이 내놓은 희망 가격)</b>와 <b>국토부 실거래가</b>를 한눈에 볼 수 있게 정리했어요. 아래 숫자 칸을 누르면 해당 매물을 볼 수 있어요.</p>
+  <section class="stats" id="stats" aria-label="요약"></section>
+  <section class="controls" aria-label="보기">
+    <div class="chiprow"><div class="seg" role="group" aria-label="거래 유형"><button type="button" data-t="sale" aria-pressed="true">매매</button><button type="button" data-t="jeon" aria-pressed="false">전세</button></div></div>
+    <div class="chiprow" id="cxChips" role="group" aria-label="단지"></div>
+  </section>
+  <section class="cards" id="cards" aria-live="polite"></section>
+  <section class="cta" aria-label="문의하기">
+    <div class="ctxt"><div class="t">원하는 조건의 집이 있는지 궁금하세요?</div><div class="s">단지·평형·층·입주 시기에 맞춰 바로 안내해 드려요.</div></div>
+    <div class="cnums">
+      <div class="cline"><span class="cl">휴대폰</span><span class="cn">010-9347-7522</span>
+        <a class="cbtn call" href="tel:01093477522" target="_blank" rel="noopener">📞 전화 걸기</a>
+        <a class="cbtn" href="sms:01093477522" target="_blank" rel="noopener">💬 문자 보내기</a></div>
+      <div class="cline"><span class="cl">사무실</span><span class="cn">031-263-6400</span>
+        <a class="cbtn call" href="tel:0312636400" target="_blank" rel="noopener">📞 전화 걸기</a></div>
+    </div>
+  </section>
+  <section class="src">
+    <p><b>데이터 출처 · 집계 기준</b></p>
+    <p id="srcAsof"></p>
+    <p>· 실거래: 국토교통부 실거래가 공개시스템 (최근 1년, 계약일 기준). 신고 시기에 따라 늦게 반영될 수 있고, 해제된 거래는 뺐어요.</p>
+    <p>· 호가는 매도·임대 희망가격이며 실제 거래가격이 아니에요. 같은 매물이 여러 번 등록된 경우 일부 중복될 수 있어요.</p>
+    <p>· 중간 호가 = 같은 단지·평형 호가를 낮은 순으로 세웠을 때 한가운데 가격(중앙값)이에요.</p>
+    <p>· 집마다 조건이 달라 모든 수치는 참고자료로만 활용해 주세요.</p>
+  </section>
+  <footer>황금1번지 공인중개사사무소 · 010-9347-7522 / 031-263-6400 · 무단 복제·배포를 금합니다.</footer>
+</div>
+<div class="panel-bg" id="panelBg" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <div class="phead"><div><div class="ptitle" id="pTitle"></div><div class="psub" id="pSub"></div></div><button type="button" id="pClose" aria-label="닫기">닫기 ✕</button></div>
+    <div class="pbody" id="pBody"></div>
+    <div class="pfoot"><span>문의 <b>010-9347-7522</b></span><span class="pbtns"><a class="cbtn call" href="tel:01093477522" target="_blank" rel="noopener">📞 전화</a><a class="cbtn" href="sms:01093477522" target="_blank" rel="noopener">💬 문자</a></span></div>
+  </div>
+</div>
+
